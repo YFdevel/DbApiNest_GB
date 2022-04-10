@@ -22,7 +22,7 @@ async function bootstrap() {
     );
     hbs.registerPartials(__dirname + '/views/partials');
     app.setViewEngine('hbs');
-    await app.listen(3000);
+    await app.listen(3001);
 }
 
 bootstrap();

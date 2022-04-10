@@ -25,12 +25,6 @@ export class UserEntity {
     @Column({ name: 'role', type: 'text' })
     role!: string;
 
-    // @Column({ name: 'role', type: 'text' })
-    // @IsEnum(Role) roles: Role;
-
-
-    @Column({ name: 'password', type: 'text' })
-    password: string;
 
     @OneToMany(() => PostEntity, (post) => post.user)
     posts: PostEntity[];

@@ -1,14 +1,14 @@
 version: '3.3'
 services:
   postgres:
-    container_name: gb_posts
+    container_name: gb_posts_first
     image: postgres
     environment:
-      - POSTGRES_DB=gb_posts
+      - POSTGRES_DB=gb_posts_first
       - POSTGRES_USER=yuriy
       - POSTGRES_PASSWORD=NnVvGET
     restart: unless-stopped
     volumes:
       - ./etc/db/data:/var/lib/postgresql/data1
     ports:
-      - '5435:5432'
+      - '5436:5432'
