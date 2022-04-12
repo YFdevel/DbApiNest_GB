@@ -86,7 +86,7 @@ export class CommentsController {
 
     @Post('create')
     async createComment(@Body() data: CommentCreateDto): Promise<CommentEntity> {
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
         const _post = await this.postsService.getPost(data.postId);
         if (!_user) {
             throw new HttpException(
@@ -115,7 +115,7 @@ export class CommentsController {
         @Query() query: ParamIdDto,
         @Body() data: CommentCreateDto,
     ): Promise<CommentEntity> {
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
         const _post = await this.postsService.getPost(data.postId);
         const _comment = await this.commentsService.getCommentById(query.id);
         if (!_comment) {
@@ -150,7 +150,7 @@ export class CommentsController {
          @UploadedFile() file: Express.Multer.File,
          @Body() body: CommentCreateDto,
     ) {
-        const _user = await this.usersService.getUser(body.userId);
+        const _user = await this.usersService.findById(body.userId);
         const _post = await this.postsService.getPost(body.postId);
         if (!_user) {
             throw new HttpException(

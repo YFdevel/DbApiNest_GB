@@ -8,7 +8,7 @@ import {
     Put,
     Query,
     Render,
-    Res
+    Res, UseGuards
 } from '@nestjs/common';
 import {PostsService} from './posts.service';
 import {PostEntity} from "../database/entities/post.entity";
@@ -19,6 +19,9 @@ import {createReadStream} from 'fs';
 import {PostCreateDto} from "../dto/post.-create.dto";
 import {UsersService} from "../users/users.service";
 import {PostUpdateDto} from "../dto/post-update.dto";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {Roles} from "../auth/role/roles.decorator";
+import {Role} from "../auth/role/role.enum";
 
 
 @Controller('posts')
@@ -57,9 +60,11 @@ export class PostsController {
         return this.postsService.getPost(query.id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Roles(Role.User)
     @Post('create')
     async createPost(@Body() data: PostCreateDto): Promise<PostEntity> {
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
         if (!_user) {
             throw new HttpException(
                 'Не существует такого автора', HttpStatus.BAD_REQUEST,
@@ -90,7 +95,7 @@ export class PostsController {
         @Body() data: PostUpdateDto): Promise<PostEntity>
     {
         const _post = await this.postsService.getPost(query.id);
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
 
         if (!_post) {
             throw new HttpException(

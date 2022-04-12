@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import {CommentEntity} from './comment.entity';
 import {UserEntity} from "./user.entity";
-import {PostCreateDto} from "../../dto/post.-create.dto";
 
 
 @Entity('posts')

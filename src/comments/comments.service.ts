@@ -69,7 +69,7 @@ export class CommentsService {
                 id,
             },
         });
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
         const _post = await this.postsService.getPost(data.postId);
         existingComment.user = _user;
         existingComment.post = _post;

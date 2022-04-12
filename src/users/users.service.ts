@@ -1,10 +1,14 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {UserEntity} from "../database/entities/user.entity";
 import {MailService} from "../mail/mail.service";
 import {UserCreateDto} from "../dto/user-create.dto";
+import { hash } from '../utils/crypto';
+import {Role} from "../auth/role/role.enum";
 
+//
+// export type User = any;
 @Injectable()
 export class UsersService {
     constructor(@InjectRepository(UserEntity)
@@ -13,6 +17,8 @@ export class UsersService {
     }
 
     async createUser(data: UserCreateDto): Promise<UserEntity> {
+        data.password = await hash(data.password);
+
         return await this.usersRepository.save(data);
     }
 
@@ -21,26 +27,30 @@ export class UsersService {
 
     }
 
-    async getUser(id: number): Promise<UserEntity | undefined> {
+    async findById(id: number): Promise<UserEntity | undefined> {
         return this.usersRepository.findOne({
             where: {
                 id,
             },
         });
     }
+    async findByEmail(email): Promise<UserEntity> {
+        return this.usersRepository.findOne({ email });
+    }
 
-    async updateUser(id:number, data: UserEntity): Promise<UserEntity> {
+    async updateUser(id:number,data: UserEntity): Promise<UserEntity> {
         let existingData = await this.usersRepository.findOne({
             where: {
                 id,
             },
         });
         let prevData = existingData;
-
+        data.password = await hash(data.password);
         const nextData= await this.usersRepository.save({
             ...existingData,
             ...data,
         });
+
         return nextData;
     }
 
@@ -56,4 +66,14 @@ export class UsersService {
         } else throw new Error('Post not found');
     }
 
+    async setModerator(idUser): Promise<UserEntity> {
+        const _user = await this.findById(idUser);
+        if (!_user) {
+            throw new UnauthorizedException();
+        }
+        _user.roles = Role.Moderator;
+        return this.usersRepository.save(_user);
+    }
 }
+
+

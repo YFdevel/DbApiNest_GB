@@ -11,12 +11,15 @@ import {PostsController} from "./posts/posts.controller";
 import {CommentsController} from "./comments/comments.controller";
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: [PostsModule, CommentsModule, MailModule,ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..','public'),
-  }), UsersModule,DatabaseModule],
+  }), UsersModule,DatabaseModule, AuthModule],
   controllers: [AppController,PostsController, CommentsController,MailController],
-  providers: [AppService],
+  providers: [AppService,
+  ],
 })
 export class AppModule {}

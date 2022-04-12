@@ -32,7 +32,7 @@ export class PostsService {
     }
 
     async getPostsByUser(id): Promise<PostEntity[]> {
-        const _user = await this.usersService.getUser(id);
+        const _user = await this.usersService.findById(id);
         const _posts = await this.postsRepository.find({
             where:{
                 user:_user
@@ -52,7 +52,7 @@ export class PostsService {
                 id,
             },
         });
-        const _user = await this.usersService.getUser(data.userId);
+        const _user = await this.usersService.findById(data.userId);
         existingPost.user = _user;
         existingPost.title = data.title;
         existingPost.description = data.description;

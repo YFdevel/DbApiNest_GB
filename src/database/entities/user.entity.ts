@@ -2,35 +2,39 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    OneToMany
+    OneToMany, Index, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable
 } from 'typeorm';
 import {PostEntity} from "./post.entity";
 import {CommentEntity} from "./comment.entity";
-import {IsEmail, IsEnum, IsNotEmpty, IsString} from "class-validator";
+import {IsEnum} from "class-validator";
+import {Role} from "../../auth/role/role.enum";
+
 
 @Entity('users')
 export class UserEntity {
-    @PrimaryGeneratedColumn({ type: 'int' })
-    id!: number;
+    @PrimaryGeneratedColumn({type: 'int'})
+    id: number;
 
-    @Column({ name: 'firstName', type: 'text' })
-    firstName!: string;
+    @Index()
+    @Column({name: 'firstName', type: 'text'})
+    firstName: string;
 
-    @Column({ name: 'lastName', type: 'text' })
-    lastName!: string;
+    @Index()
+    @Column({name: 'lastName', type: 'text'})
+    lastName: string;
 
-    @Column({ name: 'email', type: 'text' })
-    email!: string;
+    @Column({name: 'email', type: 'text'})
+    email: string;
 
-    @Column({ name: 'role', type: 'text' })
-    role!: string;
-
-    // @Column({ name: 'role', type: 'text' })
-    // @IsEnum(Role) roles: Role;
-
-
-    @Column({ name: 'password', type: 'text' })
+    @Column({name: 'password', type: 'text'})
     password: string;
+
+    // @Column('text')
+    // roles: string;
+
+    @Column('text')
+    @IsEnum(Role)
+    roles: Role;
 
     @OneToMany(() => PostEntity, (post) => post.user)
     posts: PostEntity[];
@@ -38,5 +42,10 @@ export class UserEntity {
     @OneToMany(() => CommentEntity, (comment) => comment.user)
     comments: CommentEntity[];
 
+    @CreateDateColumn({type: 'timestamp', name: 'createdAt'})
+    createdAt: Date;
+
+    @UpdateDateColumn({type: 'timestamp', name: 'updatedAt'})
+    updatedAt: Date;
 
 }
